@@ -1,17 +1,24 @@
 package com.spring.producer.Models;
+
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-public class LastStation {
+
+import java.io.Serializable;
+
+public class BusTracker implements Serializable {
     private int busId;
     private String lastStation;
     private String lastStationTime;
-    private GeoJsonPoint lastStationLocation;
+    private GeoJsonPoint lastStationLocation;// this  will be the location of the last station to fetch after the nearest station for the bus
 
-    public LastStation(int busId, String lastStation, String lastStationTime, GeoJsonPoint lastStationLocation) {
+
+    public BusTracker(int busId, String lastStation, String lastStationTime, GeoJsonPoint lastStationLocation) {
         this.busId = busId;
         this.lastStation = lastStation;
         this.lastStationTime = lastStationTime;
         this.lastStationLocation = lastStationLocation;
-    };
+    }
+
+    ;
 
     public int getBusId() {
         return busId;
@@ -44,5 +51,19 @@ public class LastStation {
     public void setLastStationLocation(GeoJsonPoint lastStationLocation) {
         this.lastStationLocation = lastStationLocation;
     }
-    public LastStation() {};
+
+    public BusTracker() {
+    }
+
+    ;
+
+    @Override
+    public String toString() {
+        return "LastStation{" +
+                "busId=" + busId +
+                ", lastStation='" + lastStation + '\'' +
+                ", lastStationTime='" + lastStationTime + '\'' +
+                ", lastStationLocation=" + lastStationLocation +
+                '}';
+    }
 }

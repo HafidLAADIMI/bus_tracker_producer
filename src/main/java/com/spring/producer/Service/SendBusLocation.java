@@ -2,23 +2,21 @@ package com.spring.producer.Service;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.spring.producer.Models.BusLocation;
-import com.spring.producer.Models.LastStation;
+import com.spring.producer.Models.BusTracker;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.data.mongodb.core.geo.GeoJsonPoint;
-import java.time.LocalDate;
+
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.Random;
 
 @Service
 public class SendBusLocation {
 
-    private final KafkaTemplate<String, LastStation> kafkaTemplate;
+    private final KafkaTemplate<String, BusTracker> kafkaTemplate;
 
-    public SendBusLocation(KafkaTemplate<String, LastStation> kafkaTemplate, ObjectMapper objectMapper) {
+    public SendBusLocation(KafkaTemplate<String, BusTracker> kafkaTemplate, ObjectMapper objectMapper) {
         this.kafkaTemplate = kafkaTemplate;
     }
     //generate random location for the bus
@@ -49,18 +47,18 @@ public class SendBusLocation {
 //        return new BusLocation(busId, latitude, longitude, timestamp);
 //    }
 
-    public LastStation generateRandomLocation(){
+    public BusTracker generateRandomLocation(){
         Random random = new Random();
         int busId = random.nextInt(10) + 1; // Random busId between 1-10
         String lastStation = "Station" + random.nextInt(10) + 1; // Random station between 1-10
         String lastStationTime = LocalTime.now().toString(); // Current time as string
         GeoJsonPoint lastStationLocation = generateRandomGeoJson(); // Random location
 
-        return new LastStation(busId, lastStation, lastStationTime, lastStationLocation);
+        return new BusTracker(busId, lastStation, lastStationTime, lastStationLocation);
     }
     @Scheduled(fixedDelay = 2000)
     public void sendBusLocation() {
-        LastStation lastStation = generateRandomLocation();
+        BusTracker lastStation = generateRandomLocation();
         try {
             // Send to Kafka
             kafkaTemplate.send("bus_location", lastStation);
